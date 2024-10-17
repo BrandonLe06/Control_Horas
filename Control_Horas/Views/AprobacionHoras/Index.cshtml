@@ -1,0 +1,41 @@
+﻿@model List<Control_Horas.Models.RegistroHorasModel>
+
+<h2>Aprobación de Horas</h2>
+
+<form asp-action="AprobarHoras" method="post">
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Código de Empleado</th>
+                <th>Hora de Entrada</th>
+                <th>Hora de Salida</th>
+                <th>Horas Trabajadas</th>
+                <th>Horas Extras</th>
+                <th>Aprobar</th>
+                <th>Rechazar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var registro in Model)
+            {
+                <tr>
+                    <td>@registro.Fecha.ToShortDateString()</td>
+                    <td>@registro.CodigoEmpleado</td>
+                    <td>@registro.HoraEntrada</td>
+                    <td>@registro.HoraSalida</td>
+                    <td>@registro.HorasTrabajadas</td>
+                    <td>@registro.HorasExtras</td>
+                    <td><input type="checkbox" name="idsAprobados" value="@registro.CodigoEmpleado" /></td>
+                    <td><input type="checkbox" name="idsRechazados" value="@registro.CodigoEmpleado" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit">Actualizar</button>
+</form>
+
+@if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+{
+    <div>@ViewBag.Mensaje</div>
+}

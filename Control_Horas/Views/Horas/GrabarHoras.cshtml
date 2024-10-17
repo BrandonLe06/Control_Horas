@@ -1,0 +1,32 @@
+﻿@model Control_Horas.Models.RegistroHorasModel
+
+<h2>Grabar Horas</h2>
+
+<form asp-action="GrabarHoras" method="post">
+    <div>
+        <label>Fecha:</label>
+        <input asp-for="Fecha" type="date" required />
+    </div>
+    <div>
+        <label>Código de Empleado:</label>
+        <input asp-for="CodigoEmpleado" required />
+    </div>
+    <div>
+        <label>Hora de Entrada (HH:MM AM/PM):</label>
+        <input asp-for="HoraEntrada" required placeholder="Ej: 08:00 AM" />
+    </div>
+    <div>
+        <label>Hora de Salida (HH:MM AM/PM):</label>
+        <input asp-for="HoraSalida" required placeholder="Ej: 10:00 PM" />
+    </div>
+    <div>
+        <button type="submit">Grabar</button>
+    </div>
+</form>
+
+<div>
+    @if (!string.IsNullOrEmpty(ViewData["Mensaje"] as string))
+    {
+        <span>@ViewData["Mensaje"]</span>
+    }
+</div>
