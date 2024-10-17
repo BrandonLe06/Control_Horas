@@ -2,6 +2,12 @@
 {
     public class AprobacionHorasModel
     {
-        public List<RegistroHorasModel> Registros { get; set; }
+        public DateTime Fecha { get; set; }
+        public string CodigoEmpleado { get; set; }
+        public string HoraEntrada { get; set; }
+        public string HoraSalida { get; set; }
+        public double HorasTrabajadas { get; set; }
+        public double HorasExtras { get; set; }
+        public string Aprobada { get; set; } = "P"; // Por defecto "P"
     }
 }

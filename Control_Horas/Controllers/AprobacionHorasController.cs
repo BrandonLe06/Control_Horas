@@ -16,30 +16,49 @@ namespace Control_Horas.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
         public IActionResult Index()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var registros = connection.Query<RegistroHorasModel>("SELECT * FROM RegistroHoras WHERE Aprobada = 'P'").AsList();
-                return View(registros);
+                var registros = connection.Query<AprobacionHorasModel>(
+                    "SELECT Fecha, CodigoEmpleado, CONVERT(VARCHAR, HoraEntrada, 108) AS HoraEntrada, " +
+                    "CONVERT(VARCHAR, HoraSalida, 108) AS HoraSalida, HorasTrabajadas, HorasExtras, Aprobada " +
+                    "FROM RegistroHoras WHERE Aprobada = 'P'"
+                ).AsList();
+
+                // Convertir a RegistroHorasModel
+                var registrosHorasModel = registros.Select(r => new RegistroHorasModel
+                {
+                    Fecha = r.Fecha,
+                    CodigoEmpleado = r.CodigoEmpleado,
+                    HoraEntrada = r.HoraEntrada,
+                    HoraSalida = r.HoraSalida,
+                    HorasTrabajadas = r.HorasTrabajadas,
+                    HorasExtras = r.HorasExtras,
+                    Aprobada = r.Aprobada
+                }).ToList();
+
+                return View(registrosHorasModel);
             }
         }
+
 
         [HttpPost]
         public IActionResult AprobarHoras(List<string> idsAprobados, List<string> idsRechazados)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                foreach (var codigoEmpleado in idsAprobados)
+                // Actualizar los registros aprobados
+                foreach (var CodigoEmpleado in idsAprobados)
                 {
-                    // Actualizar el registro a 'A' para aprobado
-                    connection.Execute("UPDATE RegistroHoras SET Aprobada = 'A' WHERE CodigoEmpleado = @CodigoEmpleado", new { CodigoEmpleado = codigoEmpleado });
+                    connection.Execute("UPDATE RegistroHoras SET Aprobada = 'A' WHERE CodigoEmpleado = @CodigoEmpleado", new { CodigoEmpleado });
                 }
 
-                foreach (var codigoEmpleado in idsRechazados)
+                // Actualizar los registros rechazados
+                foreach (var CodigoEmpleado in idsRechazados)
                 {
-                    // Actualizar el registro a 'R' para rechazado
-                    connection.Execute("UPDATE RegistroHoras SET Aprobada = 'R' WHERE CodigoEmpleado = @CodigoEmpleado", new { CodigoEmpleado = codigoEmpleado });
+                    connection.Execute("UPDATE RegistroHoras SET Aprobada = 'R' WHERE CodigoEmpleado = @CodigoEmpleado", new { CodigoEmpleado });
                 }
             }
 
